@@ -7,7 +7,7 @@ It install all the depencies under `$HOME/.local` and patch the exectuable file.
 ## Usage ##
 
 ```sh
-$ myapt init # Only need by the first time, it will set up some environment
+$ myapt init # Only need by the first time, it will set up environment
 $ myapt install some-package
 ```
 
