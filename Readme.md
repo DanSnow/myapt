@@ -17,13 +17,13 @@ Just download the scripts and place in your PATH.
 
 ## Commands ##
 
-- init
-  Usage: `myapt init`
-  Set up environment for `myapt`
-  Current only support `bash` and `zsh`
-- install
-  Usage: `myapt install <package-name>`
-  Install package under `$HOME/.local`
+- init  
+  Usage: `myapt init`  
+  Set up environment for `myapt`  
+  Current only support `bash` and `zsh`  
+- install  
+  Usage: `myapt install <package-name>`  
+  Install package under `$HOME/.local`  
 
 ## Depencies ##
 
