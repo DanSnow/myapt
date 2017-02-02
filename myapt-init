@@ -1,0 +1,22 @@
+#!/bin/bash
+
+environment() {
+  echo '# Add by myapt'
+  echo 'export PATH="$PATH:$HOME/.local/bin:$HOME/.local/usr/bin"'
+}
+
+if [[ -f "$HOME/.bashrc" ]] && ! grep "$HOME/.bashrc" 'Add by myapt'; then
+  echo 'Install to bashrc'
+  environment >> "$HOME/.bashrc"
+fi
+
+if [[ -f "$HOME/.zshrc" ]] && ! grep "$HOME/.zshrc" 'Add by myapt'; then
+  echo 'Install to zshrc'
+  environment >> "$HOME/.zshrc"
+fi
+
+echo 'Install depencies'
+mysql-install patchelf
+
+echo 'Done'
+echo "Please reload your shell's config. Or logout and login back"

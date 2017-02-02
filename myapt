@@ -1,0 +1,20 @@
+#!/bin/bash
+
+usage() {
+  echo 'myapt - apt without root'
+  echo 'Usage: myapt <command> [argument]'
+  echo 'Commands:'
+  echo '  init - Install myapt'
+  echo '  install - Install package'
+}
+
+sub_cmd="$1"
+if [[ ! -x "myapt-$sub_cmd" ]]; then
+  usage
+  exit 2
+fi
+
+shift
+
+"myapt-$sub_cmd" "$@"
+

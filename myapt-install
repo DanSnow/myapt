@@ -1,0 +1,79 @@
+#!/bin/bash
+
+# Silent pushd & popd
+pushd() {
+    command pushd "$@" > /dev/null
+}
+
+popd() {
+    command popd > /dev/null
+}
+
+# For text processing
+export LC_ALL='C'
+
+pkg_name="$1"
+
+if dpkg -s "$pkg_name" > /dev/null 2>&1; then
+  echo "Already installed"
+  exit
+fi
+
+# Get depencies
+if ! depends_list=$(apt-cache depends "$pkg_name" 2> /dev/null); then
+  echo 'E: No package found'
+  exit 1
+fi
+
+# Extract all depencies
+depends=($(grep 'Depends' <<< "$depends_list" | cut -d ':' -f 2 | sed 's/[[:space:]]//g' | tr "\n" ' '))
+
+# Create temp directory
+download_path=$(mktemp -d 'myapt.XXXXXXXX')
+pushd "$download_path"
+
+# Download all depencies
+for depend in "${depends[@]}"; do
+  if dpkg -s "$depend" > /dev/null 2>&1; then
+    # Already installed. Skip
+    continue
+  fi
+  echo "Downloading $depend..."
+  apt-get download "$depend"
+done
+
+apt-get download "$pkg_name"
+
+# Extract all package to HOME
+for package in *; do
+  mkdir unpack
+  pushd unpack
+  ar -x "../$package"
+  pack_name=$(ls data.*)
+  extname=${pack_name##*.}
+  echo "Unpacking ${package}..."
+  case "$extname" in
+    bz2)
+      tar -C "$HOME/.local" -jxf "$pack_name"
+      ;;
+    gz)
+      tar -C "$HOME/.local" -zxf "$pack_name"
+      ;;
+    xz)
+      tar -C "$HOME/.local" -Jxf "$pack_name"
+      ;;
+    *)
+      echo "Unknown type \"$extname\""
+      ;;
+  esac
+  popd
+  rm -rf unpack
+done
+
+# Clean up
+popd
+rm -rf "$download_path"
+
+# Do the magic
+myapt-patch-rpath
+

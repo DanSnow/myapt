@@ -1,0 +1,25 @@
+#!/bin/bash
+
+if ! patchelf --version > /dev/null 2>&1; then
+  exit
+fi
+
+# Generate rpath
+rpath="$HOME/.local/lib:$HOME/.local/lib/i386-linux-gnu:"
+rpath="$rpath:$HOME/.local/usr/lib:$HOME/.local/usr/lib/i386-linux-gnu"
+if [[ "$(uname -m)" == 'x86_64' ]];then
+  rpath="$rpath:$HOME/.local/lib/x86_64-linux-gnu:$HOME/.local/usr/lib/x86_64-linux-gnu"
+fi
+
+for exectuable in $HOME/.local/bin/*; do
+  if file "$exectuable" | grep 'ELF' > /dev/null; then
+    patchelf --set-rpath "$rpath" "$exectuable"
+  fi
+done
+
+for exectuable in $HOME/.local/usr/bin/*; do
+  if file "$exectuable" | grep 'ELF' > /dev/null; then
+    patchelf --set-rpath "$rpath" "$exectuable"
+  fi
+done
+
