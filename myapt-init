@@ -16,7 +16,7 @@ if [[ -f "$HOME/.zshrc" ]] && ! grep "$HOME/.zshrc" 'Add by myapt'; then
 fi
 
 echo 'Install depencies'
-mysql-install patchelf
+myapt-install patchelf
 
 echo 'Done'
 echo "Please reload your shell's config. Or logout and login back"
