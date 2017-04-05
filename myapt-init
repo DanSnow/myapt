@@ -5,6 +5,8 @@ environment() {
   echo 'export PATH="$PATH:$HOME/.local/bin:$HOME/.local/usr/bin"'
 }
 
+mkdir -p "$HOME/.local"
+
 if [[ -f "$HOME/.bashrc" ]] && ! grep "$HOME/.bashrc" 'Add by myapt'; then
   echo 'Install to bashrc'
   environment >> "$HOME/.bashrc"
